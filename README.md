@@ -5,7 +5,7 @@ There are two models in this repository, one uses REF 2021 data to predict the h
 ## Files
 - `ref_score_prediction_set1.py`: Code to train and evaluate the model.
 - `ref_score_predictor_set1.joblib`: Trained model file.
-- `REF 2021 Results - All - 2022-05-06.xlsx`: Raw REF dataset.
+- `REF 2021 Results - All - 2022-05-06.xlsx`: Raw REF dataset (get it from REF2021 site).
 - `Model confidence Sore`: A Sheet to understand the confidence score of the model.
 - `Steps in training REF AI`: The steps taken in providing the training dataset and fine tuning the model.
 - `distilBert`: Fine-tune script.
