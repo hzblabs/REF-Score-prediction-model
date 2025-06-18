@@ -1,0 +1,6 @@
+| Confidence Score | Meaning                       | Trust Level         |
+| ---------------- | ----------------------------- | ------------------- |
+| **0.85 – 1.00**  | Model is **very confident**   | ✅ High trust        |
+| **0.70 – 0.84**  | Model is **fairly confident** | 👍 Reasonable trust |
+| **0.50 – 0.69**  | Model is **uncertain**        | ⚠️ Caution          |
+| **< 0.50**       | Model is basically guessing   | ❌ Don’t rely on it  |
