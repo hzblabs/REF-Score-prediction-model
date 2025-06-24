@@ -1,0 +1,98 @@
+REF_Score_Prediction.py Code Explanation
+
+1. Load Required Libraries
+
+import pandas as pd, numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, OrdinalEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+import joblib
+
+These are standard libraries for:
+Data manipulation (`pandas`, `numpy`)
+Machine learning pipeline and preprocessing (`sklearn`)
+Saving the trained model (`joblib`)
+
+2. Load & Clean the REF Dataset
+excel_file = pd.ExcelFile("REF 2021 Results - All - 2022-05-06.xlsx")
+df = excel_file.parse('Sheet1', skiprows=5)
+
+Loads the Excel file and skips the top 5 metadata rows.
+The actual header row is then assigned:
+new_header = df.iloc[0]
+df = df[1:]
+df.columns = new_header
+
+3. Filter & Select Set 1 Features
+
+df = df[df['Profile'] == 'Overall']
+
+Keeps only the rows with "Overall" quality profiles (ignores Outputs, Impact, Environment).
+
+columns = ['Main panel', 'FTE of submitted staff', '% of eligible staff submitted', '4*', '3*', '2*', '1*', 'Unclassified']
+df = df[columns].copy()
+
+Selects only Set 1 input columns and star rating outputs.
+
+df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric, errors='coerce')
+df.dropna(inplace=True)
+
+Cleans the data by converting values to numeric and dropping rows with missing values.
+
+4. Create the Target Variable
+
+def get_highest_score(row):
+    scores = {'4*': row['4*'], '3*': row['3*'], '2*': row['2*'], '1*': row['1*'], 'Unclassified': row['Unclassified']}
+    return max(scores, key=scores.get)
+df['Target'] = df.apply(get_highest_score, axis=1)
+
+Creates the label (`Target`) by choosing the star rating with the **highest percentage** for each submission.
+
+5. Train/Test Split
+
+X = df[['Main panel', 'FTE of submitted staff', '% of eligible staff submitted']]
+y = df['Target']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=42)
+
+Splits data into:
+60% training
+40% testing
+
+6. Preprocessing Setup
+preprocessor = ColumnTransformer(transformers=[
+    ('cat', OrdinalEncoder(), ['Main panel']),
+    ('num', StandardScaler(), ['FTE of submitted staff', '% of eligible staff submitted'])
+])
+
+Encodes categorical variable `Main panel` into numbers.
+Normalizes numeric values for better model performance.
+
+7. Build Pipeline + Train
+
+pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('classifier', RandomForestClassifier(random_state=42))
+])
+pipeline.fit(X_train, y_train)
+
+Creates a full ML pipeline: preprocess → train classifier (Random Forest)
+Fits the pipeline on training data
+
+8. Evaluate Performance
+
+y_pred = pipeline.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+report = classification_report(y_test, y_pred)
+
+Evaluates how well the model performed on the 40% test data:
+
+Prints accuracy
+Shows precision/recall/F1-score for each REF class (4\*, 3\*, etc.)
+
+9. Save the Model
+joblib.dump(pipeline, 'ref_score_predictor_set1.joblib')
+
+Saves the trained pipeline so you can load it later and use it without retraining.
