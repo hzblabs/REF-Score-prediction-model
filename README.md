@@ -7,7 +7,7 @@ There are two models in this repository, one uses REF 2021 data to predict the h
 - `ref_score_predictor_set1.joblib`: Trained model file.
 - `Model confidence Sore`: A Sheet to understand the confidence score of the model.
 - `Steps in training REF AI`: The steps taken in providing the training dataset and fine tuning the model.
-- `Manual.pdf`: A sheet to understand the chosen procedure for labelling and training.
+- `manual.pdf`: A sheet to understand the chosen procedure for labelling and training.
 - `distilBert`: Fine-tune script.
 - `predict_ref_star`: A test script that takes in full text and predict a score with confidence level.
 
