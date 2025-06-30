@@ -9,6 +9,7 @@ There are two models in this repository, one uses REF 2021 data to predict the h
 - `Steps in training REF AI`: The steps taken in providing the training dataset and fine tuning the model.
 - `manual.pdf`: A sheet to understand the chosen procedure for labelling and training.
 - `distilBert`: Fine-tune script.
+- `Test.py`: A test script that takes in set 1 procedures features to predict a score.
 - `predict_ref_star`: A test script that takes in full text and predict a score with confidence level.
 
 ## How to Run
